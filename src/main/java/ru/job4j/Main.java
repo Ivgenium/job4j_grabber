@@ -4,17 +4,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.grabber.model.Post;
 import ru.job4j.grabber.service.Config;
+import ru.job4j.grabber.service.HabrCareerParse;
 import ru.job4j.grabber.service.SchedulerManager;
 import ru.job4j.grabber.service.SuperJobGrab;
 import ru.job4j.grabber.stores.JdbcStore;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class.getName());
 
     public static void main(String[] args) throws ClassNotFoundException {
+        HabrCareerParse habrCareerParse = new HabrCareerParse();
+        List<Post> rsl = habrCareerParse.fetch();
+        for (Post el : rsl) {
+            System.out.println(el);
+        }
         var config = new Config();
         config.load("application.properties");
         Class.forName(config.get("db.driver-class-name"));
