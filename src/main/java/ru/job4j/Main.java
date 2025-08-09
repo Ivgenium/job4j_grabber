@@ -8,6 +8,7 @@ import ru.job4j.grabber.service.HabrCareerParse;
 import ru.job4j.grabber.service.SchedulerManager;
 import ru.job4j.grabber.service.SuperJobGrab;
 import ru.job4j.grabber.stores.JdbcStore;
+import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class.getName());
 
     public static void main(String[] args) throws ClassNotFoundException {
-        HabrCareerParse habrCareerParse = new HabrCareerParse();
+        HabrCareerParse habrCareerParse = new HabrCareerParse(new HabrCareerDateTimeParser());
         List<Post> rsl = habrCareerParse.fetch();
         for (Post el : rsl) {
             System.out.println(el);
