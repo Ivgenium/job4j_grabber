@@ -6,6 +6,7 @@ import ru.job4j.grabber.model.Post;
 import ru.job4j.grabber.utils.DateTimeParser;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class HabrCareerParse implements Parse {
     private static final String SOURCE_LINK = "https://career.habr.com";
     private static final String PREFIX = "/vacancies?page=";
     private static final String SUFFIX = "&q=Java%20developer&type=all";
-    private static final int COUNT = 5;
+    private static final int COUNT = 1;
     private final DateTimeParser dateTimeParser;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
@@ -37,6 +38,7 @@ public class HabrCareerParse implements Parse {
                     String vacancyName = titleElement.text();
                     String link = String.format("%s%s", SOURCE_LINK,
                             linkElement.attr("href"));
+                    var description = retrieveDescription(link);
                     var dateTimeElement = row.select(".vacancy-card__date").first();
                     String dateTime = dateTimeElement.child(0).attr("datetime");
                     var post = new Post();
@@ -51,5 +53,23 @@ public class HabrCareerParse implements Parse {
             LOG.error("When load page", e);
         }
         return result;
+    }
+
+    private String retrieveDescription(String link) {
+        StringBuilder rsl = new StringBuilder();
+        try {
+            var connection = Jsoup.connect(link);
+            var document = connection.get();
+            var rows = document.select(".vacancy-description__text");
+            rows.forEach(row -> {
+                for (int i = 0; i < rows.size(); i++) {
+                    var element = row.child(i);
+                    rsl.append(element.text()).append(System.lineSeparator());
+                }
+            });
+        } catch (IOException e) {
+            LOG.error("When load page", e);
+        }
+        return rsl.toString();
     }
 }
