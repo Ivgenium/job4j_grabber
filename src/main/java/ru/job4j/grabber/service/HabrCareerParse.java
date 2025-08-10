@@ -45,7 +45,7 @@ public class HabrCareerParse implements Parse {
                     post.setTitle(vacancyName);
                     post.setLink(link);
                     post.setDescription(description);
-                    post.setTime(dateTimeParser.parse(dateTime));
+                    post.setTime(dateTimeParser.parse(dateTime).toEpochSecond(ZoneOffset.UTC));
                     result.add(post);
                 });
                 pageNumber++;

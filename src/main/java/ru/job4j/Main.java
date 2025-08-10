@@ -12,6 +12,8 @@ import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class Main {
@@ -33,6 +35,7 @@ public class Main {
             var store = new JdbcStore(connection);
             var post = new Post();
             post.setTitle("Super Java Job");
+            post.setTime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
             store.save(post);
             store.findById(1L).ifPresent(System.out::println);
             store.getAll().forEach(System.out::println);

@@ -1,6 +1,8 @@
 package ru.job4j.grabber.model;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -9,13 +11,13 @@ public class Post {
     private String title;
     private String link;
     private String description;
-    private LocalDateTime time = LocalDateTime.now().withNano(0);
+    private long time;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMMM-EEEE-yyyy HH:mm:ss");
 
     public Post() {
     }
 
-    public Post(Long id, String title, String link, String description, LocalDateTime time) {
+    public Post(Long id, String title, String link, String description, long time) {
         this.id = id;
         this.title = title;
         this.link = link;
@@ -25,10 +27,6 @@ public class Post {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -55,11 +53,11 @@ public class Post {
         this.description = description;
     }
 
-    public LocalDateTime getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -84,7 +82,7 @@ public class Post {
                 + ", title='" + title + '\''
                 + ", link='" + link + '\''
                 + ", description='" + description + '\''
-                + ", time=" + time.format(FORMATTER)
+                + ", time=" + LocalDateTime.ofInstant(Instant.ofEpochSecond(time), ZoneId.of("UTC")).format(FORMATTER)
                 + '}';
     }
 }

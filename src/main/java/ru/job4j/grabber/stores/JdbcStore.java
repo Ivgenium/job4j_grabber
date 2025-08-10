@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 import ru.job4j.grabber.model.Post;
 
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +26,7 @@ public class JdbcStore implements Store {
                 resultSet.getString("name"),
                 resultSet.getString("link"),
                 resultSet.getString("text"),
-                resultSet.getTimestamp("created").toLocalDateTime());
+                resultSet.getTimestamp("created").toLocalDateTime().toEpochSecond(ZoneOffset.UTC));
     }
 
     @Override
@@ -32,7 +36,7 @@ public class JdbcStore implements Store {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
             preparedStatement.setString(3, post.getLink());
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getTime()));
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.ofInstant(Instant.ofEpochSecond(post.getTime()), ZoneId.of("UTC"))));
             preparedStatement.execute();
         } catch (SQLException e) {
             LOG.error("When save post into database ", e);
